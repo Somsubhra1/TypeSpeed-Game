@@ -17,6 +17,20 @@
     
     <div class="container text-center">
 
+      <!-- level selector -->
+      <div class="row mb-3">
+        <div class="col-md-2 mx-auto">
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Select level</label>
+            <select class="form-control" id="exampleFormControlSelect1">
+              <option value="1" selected>Easy</option>
+              <option value="2">Medium</option>
+              <option value="3">Hard</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- word & input -->
       <div class="row">
         <div class="col-md-6 mx-auto">
@@ -28,8 +42,7 @@
           <input type="text" class="form-control form-control-lg" placeholder="Type the word..." id="word-input" autofocus>
           <h4 class="mt-3" id="message"></h4>
 
-          <!-- time & score -->
-          
+          <!-- time & score -->          
           <div class="mt-5 row">
             <div class="col-md-6">
               <h3>Time left: 
@@ -44,7 +57,6 @@
           </div>
 
           <!-- instructions -->
-
           <div class="row mt-5">
             <div class="col-md-12">
               <div class="card card-body bg-secondary text-white">
