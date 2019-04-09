@@ -2,6 +2,15 @@
 let score = 0;
 let isPlaying;
 
+// API stuff
+const API = {
+    key: "91c7cc67169395721f00c09edd909b2d76244ef3e41bebe8b",
+    limit: 125,
+};
+
+const URL = `https://api.wordnik.com/v4/words.json/randomWords?hasDictionaryDef=true&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=-1&limit=${API.limit}&api_key=${API.key}`;
+
+
 // game levels
 const levels = {
     easy: 5,
@@ -25,7 +34,7 @@ const timeDisplay = document.querySelector('#time');
 const levelSelector = document.querySelector('#levelSelector');
 
 // Words array
-const words = [
+var words = [
     'hat',
     'river',
     'lucky',
@@ -53,6 +62,9 @@ const words = [
     'definition'
 ];
 
+// fetch words from API
+fetchWords();
+
 // Event listeners
 window.addEventListener('load', init);
 wordInput.addEventListener('input', startMatch);
@@ -62,8 +74,6 @@ levelSelector.addEventListener('change', chooseLevel);
 function init() {
     // show number of seconds in UI
     seconds.textContent = currentLevel;
-    // load word from array
-    showWord(words);
         
     // seconds count down
     counter = setInterval(countDown, 1000);
@@ -74,21 +84,46 @@ function init() {
 
 // Choose level
 function chooseLevel() {
+    // clearing countDowns
     clearInterval(counter);
     clearInterval(status);
+
+    // selecting level
     currentLevel = levels[levelSelector.value];
     time = currentLevel;
+
+    // initialising again
     init();    
 }
 
+// fetch words from API:
+function fetchWords() {
+    axios.get(URL)
+        .then(function (res) {
+            res.data.forEach(element => {
+                if (!element.word.includes('-') && !element.word.includes(' ')) {
+                    words.push(element.word.toLowerCase());                    
+                }
+            });            
+            // load words
+            showWord(words);
+        })
+        .catch(err => {
+            console.log('error');
+        });
+    
+}
+
 // show random word
-function showWord(words) {
+function showWord(words) {      
     // generating random index
-    const randIndex = Math.floor(Math.random() * words.length);
+    let randIndex = Math.floor(Math.random() * words.length);  
     
     // showing random word
-    currentWord.textContent = words[randIndex];
-    
+    currentWord.innerHTML = words[randIndex];
+
+    // removing already used word
+    words.splice(randIndex, 1);    
 }
 
 function countDown() {
