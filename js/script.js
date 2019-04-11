@@ -1,6 +1,7 @@
 // Global vars
 let score = 0;
 let isPlaying;
+let highScore = score;
 
 // API stuff
 const API = {
@@ -32,6 +33,7 @@ const message = document.querySelector('#message');
 const seconds = document.querySelector('#seconds');
 const timeDisplay = document.querySelector('#time');
 const levelSelector = document.querySelector('#levelSelector');
+const highScore_span = document.querySelector('#highScore');
 
 // Words array
 var words = [
@@ -61,6 +63,16 @@ var words = [
     'space',
     'definition'
 ];
+
+// setting localStorage
+
+if (!localStorage.getItem('typeHigh')) {
+    localStorage.setItem('typeHigh', highScore.toString());
+}
+else {
+    highScore = parseInt(localStorage.getItem('typeHigh'));   
+}
+highScore_span.textContent = highScore;
 
 // fetch words from API
 fetchWords();
@@ -92,6 +104,9 @@ function chooseLevel() {
     currentLevel = levels[levelSelector.value];
     time = currentLevel;
 
+    // changing word on level change
+    fetchWords();
+
     // initialising again
     init();    
 }
@@ -120,7 +135,7 @@ function showWord(words) {
     let randIndex = Math.floor(Math.random() * words.length);  
     
     // showing random word
-    currentWord.innerHTML = words[randIndex];
+    currentWord.textContent = words[randIndex];
 
     // removing already used word
     words.splice(randIndex, 1);    
@@ -153,6 +168,7 @@ function startMatch() {
         showWord(words);
         wordInput.value = '';
         score++;
+        checkHighScore(score);
     }
     scoreDisplay.textContent = (score == -1) ? '0' : score;
 }
@@ -167,4 +183,13 @@ function matchWords() {
     }
     message.textContent = '';
     return false;
+}
+
+// checking highScore and updating
+function checkHighScore(score) {
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('typeHigh', highScore.toString());
+        highScore_span.textContent = highScore;
+    }
 }
